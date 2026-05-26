@@ -99,7 +99,7 @@ function PhotoWithCursorColor() {
       <div
         ref={maskRef}
         className="absolute inset-0"
-        style={{ maskImage: "none", webkitMaskImage: "none" }}
+        style={{ maskImage: "none", WebkitMaskImage: "none" }}
       >
         <img
           src="/profile.png"
