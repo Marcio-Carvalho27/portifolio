@@ -5,10 +5,10 @@ import { useEffect, useRef } from "react";
 import { LiaLinkedinIn, LiaGithub } from "react-icons/lia";
 
 const navItems = [
-  { label: "Work", count: 40 },
+  { label: "Work", count: 2 },
   { label: "Service", count: 4 },
-  { label: "Experience", count: 9 },
-  { label: "Moments", count: 120 },
+  { label: "Experience", count: 3 },
+  { label: "Moments", count: 5 },
   { label: "Contact", count: null },
 ];
 
