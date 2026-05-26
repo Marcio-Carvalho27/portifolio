@@ -12,8 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body>{children}</body>
+    <html lang="pt-BR" className="m-0 p-0">
+      <body className="m-0 p-0">{children}</body>
     </html>
   );
 }
