@@ -1,127 +1,169 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { projects } from "@/src/data/work";
 import { ProjectCard } from "@/src/components/work/ProjectCard";
-import { useWorkScroll } from "@/src/lib/useWorkScroll";
 
 export function Work() {
-  const {
-    sectionRef,
-    trackRef,
-    visible,
-    progress,
-    handleMouseDown,
-    handleScroll,
-  } = useWorkScroll();
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  const [visible, setVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const track = trackRef.current;
+
+    if (!section || !track) return;
+
+    let current = 0;
+    let target = 0;
+    let animationFrame: number;
+
+    const lerp = (
+      start: number,
+      end: number,
+      factor: number
+    ) => {
+      return start + (end - start) * factor;
+    };
+
+    const updateScroll = () => {
+      const rect = section.getBoundingClientRect();
+
+      const scrollableHeight =
+        section.offsetHeight - window.innerHeight;
+
+      const scrollProgress = Math.min(
+        Math.max(-rect.top / scrollableHeight, 0),
+        1
+      );
+
+      const maxTranslate =
+        track.scrollWidth - window.innerWidth;
+
+      target = maxTranslate * scrollProgress;
+
+      current = lerp(current, target, 0.50);
+
+      track.style.transform = `translate3d(${-current}px,0,0)`;
+
+      setProgress(current / maxTranslate || 0);
+
+      if (scrollProgress > 0.03) {
+        setVisible(true);
+      }
+
+      animationFrame = requestAnimationFrame(updateScroll);
+    };
+
+    updateScroll();
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
+  }, []);
 
   return (
     <section
       ref={sectionRef}
       id="work"
-      className="relative min-h-screen flex flex-col justify-center"
-      style={{ background: "#f6f8f5", overflow: "hidden" }}
+      style={{
+        height: `${projects.length * 110}vh`,
+        position: "relative",
+        background: "#f6f8f5",
+      }}
     >
-      {/* Top divider */}
-      <div
-        className="absolute top-0 left-10 lg:left-16 right-10 lg:right-16 h-px"
-        style={{ background: "rgba(73,100,67,0.12)" }}
-      />
-
-      {/* Header */}
-      <div
-        className="px-10 lg:px-16 pt-16 pb-10"
-        style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0)" : "translateY(36px)",
-          transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)",
-        }}
-      >
-        <p
-          className="text-sm font-semibold tracking-[0.25em] uppercase mb-3"
-          style={{ color: "rgba(73,100,67,0.55)" }}
-        >
-          Portfólio
-        </p>
-        <h2
-          className="leading-none tracking-tight"
+      <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center">
+        {/* Divider */}
+        <div
+          className="absolute top-0 left-10 lg:left-16 right-10 lg:right-16 h-px"
           style={{
-            fontFamily: "'Oswald', sans-serif",
-            fontSize: "clamp(36px, 5vw, 72px)",
-            fontWeight: 700,
-            color: "#496443",
+            background: "rgba(73,100,67,0.12)",
+          }}
+        />
+
+        {/* Header */}
+        <div
+          className="px-10 lg:px-16 pt-16 pb-10"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible
+              ? "translateY(0px)"
+              : "translateY(40px)",
+            transition:
+              "opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1)",
           }}
         >
-          /Work.
-        </h2>
-      </div>
+          <p
+            className="text-sm font-semibold tracking-[0.25em] uppercase mb-3"
+            style={{
+              color: "rgba(73,100,67,0.55)",
+            }}
+          >
+            Portfólio
+          </p>
 
-      {/* Carousel */}
-      <div
-        ref={trackRef}
-        onScroll={handleScroll}
-        onMouseDown={handleMouseDown}
-        className="flex gap-5 px-10 lg:px-16 pb-10 work-track"
-        style={{
-          overflowX: "auto",
-          overflowY: "hidden",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-          cursor: "grab",
-          userSelect: "none",
-        }}
-      >
-        {projects.map((project, i) => (
-          <ProjectCard key={project.id} project={project} index={i} visible={visible} />
-        ))}
-        <div className="shrink-0 w-6" />
-      </div>
+          <h2
+            className="leading-none tracking-tight"
+            style={{
+              fontFamily: "'Oswald', sans-serif",
+              fontSize: "clamp(36px, 5vw, 72px)",
+              fontWeight: 700,
+              color: "#496443",
+            }}
+          >
+            /Work.
+          </h2>
+        </div>
 
-      {/* Progress bar */}
-      <div
-        className="px-10 lg:px-16 mb-14"
-        style={{
-          opacity: visible ? 1 : 0,
-          transition: "opacity 0.6s ease 0.4s",
-        }}
-      >
-        <div className="flex items-center gap-3">
-          {projects.map((_, i) => {
-            const segSize  = 1 / projects.length;
-            const segStart = i * segSize;
-            const segEnd   = segStart + segSize;
-            const fill     = Math.min(1, Math.max(0, (progress - segStart) / segSize));
-            const isFull   = progress >= segEnd - 0.001;
-            const isActive = progress >= segStart && progress < segEnd;
+        {/* Carousel */}
+        <div className="overflow-hidden">
+          <div
+            ref={trackRef}
+            className="flex gap-5 px-10 lg:px-16 will-change-transform"
+            style={{
+              width: "max-content",
+            }}
+          >
+            {projects.map((project, i) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                index={i}
+                visible={visible}
+              />
+            ))}
 
-            return (
-              <div
-                key={i}
-                className="relative rounded-full overflow-hidden flex-1"
-                style={{ height: "2px", background: "rgba(73,100,67,0.12)" }}
-              >
-                <div
-                  className="absolute left-0 top-0 h-full rounded-full"
-                  style={{
-                    width: isFull
-                      ? "100%"
-                      : isActive
-                      ? `${fill * 100}%`
-                      : i < Math.floor(progress * projects.length)
-                      ? "100%"
-                      : "0%",
-                    background: "#2c2c2c",
-                    transition: "width 0.12s linear",
-                  }}
-                />
-              </div>
-            );
-          })}
+            <div className="w-16 shrink-0" />
+          </div>
+        </div>
+
+        {/* Progress */}
+        <div className="px-10 lg:px-16 mt-10">
+          <div
+            style={{
+              width: "100%",
+              height: "2px",
+              background: "rgba(73,100,67,0.12)",
+              overflow: "hidden",
+              borderRadius: "999px",
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                background: "#2c2c2c",
+                transformOrigin: "left",
+                transform: `scaleX(${progress})`,
+                transition: "transform 0.1s linear",
+              }}
+            />
+          </div>
         </div>
       </div>
-
-      <style>{`
-        .work-track::-webkit-scrollbar { display: none; }
-      `}</style>
     </section>
   );
 }
