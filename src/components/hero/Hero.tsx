@@ -3,9 +3,10 @@
 import { useEffect, useRef } from "react";
 
 import { LiaLinkedinIn, LiaGithub } from "react-icons/lia";
+import { projects } from "../../data/work";
 
 const navItems = [
-  { label: "Work", count: 2 },
+  { label: "Work", count: projects.length },
   { label: "Service", count: 4 },
   { label: "Experience", count: 3 },
   { label: "Moments", count: 5 },
@@ -201,23 +202,56 @@ function ContactCards() {
 }
 
 export function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const section = sectionRef.current;
+      const content = contentRef.current;
+      if (!section || !content) return;
+
+      const scrollY   = window.scrollY;
+      const sectionH  = section.offsetHeight;
+      const progress  = Math.min(1, Math.max(0, scrollY / sectionH));
+
+      const translateY = -(progress * 80);
+      const opacity    = 1 - progress * 1.8;
+      const scale      = 1 - progress * 0.06;
+      const blur       = progress * 12;
+
+      content.style.transform = `translateY(${translateY}px) scale(${scale})`;
+      content.style.opacity   = String(Math.max(0, opacity));
+      content.style.filter    = `blur(${blur}px)`;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <section className="relative h-screen overflow-hidden bg-[#f6f8f5]">
+    <section ref={sectionRef} className="relative h-screen overflow-hidden bg-[#f6f8f5]">
+      <div
+        ref={contentRef}
+        className="absolute inset-0"
+        style={{ willChange: "transform, opacity, filter" }}
+      >
       <header
-        className="relative z-50 grid grid-cols-3 items-center px-10 pt-8"
+        className="relative z-50 grid items-center px-4 lg:px-10 pt-8"
         style={{
+          gridTemplateColumns: "1fr auto 1fr",
           animation: "slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) both",
         }}
       >
-        <div className="flex h-8 w-fit items-center gap-2.5 rounded-full border border-[#496443]/20 bg-white px-8 shadow-[0_2px_12px_rgba(73,100,67,0.10)]">
+        {/* Badge — shrinks on smaller desktops */}
+        <div className="flex h-8 w-fit items-center gap-2.5 rounded-full border border-[#496443]/20 bg-white px-4 lg:px-8 shadow-[0_2px_12px_rgba(73,100,67,0.10)] overflow-hidden">
           <span className="h-2 w-2 shrink-0 rounded-full bg-[#496443]" />
-
-          <span className="text-sm font-medium text-[#496443]">
+          <span className="text-xs lg:text-sm font-medium text-[#496443] whitespace-nowrap">
             Available for New Project
           </span>
         </div>
 
-        <nav className="flex items-center justify-center gap-10">
+        <nav className="flex items-center justify-center gap-4 lg:gap-10 px-4">
           {navItems.map((item) => (
             <NavItem
               key={item.label}
@@ -228,7 +262,7 @@ export function Hero() {
         </nav>
 
         <div className="flex justify-end">
-          <button className="h-10 rounded-full bg-[#496443] px-6 text-sm font-medium text-white transition-all duration-500 hover:-translate-y-1 hover:scale-[1.03] hover:opacity-90">
+          <button className="h-10 rounded-full bg-[#496443] px-4 lg:px-6 text-xs lg:text-sm font-medium text-white transition-all duration-500 hover:-translate-y-1 hover:scale-[1.03] hover:opacity-90 whitespace-nowrap">
             Let's Talk ↗
           </button>
         </div>
@@ -246,7 +280,7 @@ export function Hero() {
           className="leading-none tracking-tight text-[#496443]"
           style={{
             fontFamily: "'Oswald', sans-serif",
-            fontSize: "clamp(64px, 10vw, 160px)",
+            fontSize: "clamp(56px, 10vw, 160px)",
             fontWeight: 700,
             whiteSpace: "nowrap",
             animation: "float 8s ease-in-out infinite",
@@ -271,13 +305,16 @@ export function Hero() {
       </div>
 
       <div
-        className="absolute left-14 top-[78%] z-30 -translate-y-1/2"
+        className="absolute left-4 lg:left-14 top-[78%] z-30 -translate-y-1/2"
         style={{
           animation:
             "fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both",
         }}
       >
-        <h2 className="text-[36px] font-semibold leading-[0.95] text-[#496443]">
+        <h2
+          className="font-semibold leading-[0.95] text-[#496443]"
+          style={{ fontSize: "clamp(20px, 3vw, 36px)" }}
+        >
           Full Stack Developer
         </h2>
 
@@ -291,6 +328,7 @@ export function Hero() {
       </div>
 
       <ContactCards />
+      </div>{/* end exit-animation wrapper */}
 
       <style>{`
         @keyframes slideDown {
