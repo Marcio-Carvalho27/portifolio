@@ -178,7 +178,6 @@ export function Experience() {
                           key={moment.id}
                           moment={moment}
                           index={i}
-                          dark
                         />
                       )
                     )}
