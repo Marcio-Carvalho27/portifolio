@@ -1,11 +1,14 @@
 import { LiaLinkedinIn, LiaGithub } from "react-icons/lia";
 import { projects } from "./work";
+import { services } from "./service";
+import { experiences } from "./experience";
+import { moments } from "./moment";
 
 export const navItems = [
   { label: "Work", count: projects.length },
-  { label: "Service", count: 4 },
-  { label: "Experience", count: 3 },
-  { label: "Moments", count: 5 },
+  { label: "Service", count: services.length },
+  { label: "Experience", count: experiences.length },
+  { label: "Moments", count: moments.length },
   { label: "Contact", count: null },
 ];
 
