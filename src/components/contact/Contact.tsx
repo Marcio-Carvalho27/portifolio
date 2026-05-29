@@ -134,10 +134,10 @@ export function Contact() {
               boxShadow: "0 12px 30px rgba(73,100,67,0.30)",
             }}
           >
-            <span className="text-white">Contact Me</span>
+            
             
 
-            <span className="text-base text-white">↗</span>
+            <span className="text-base text-white"> Contact Me ↗</span>
           </a>
         </div>
 
