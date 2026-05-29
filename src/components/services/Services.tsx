@@ -98,7 +98,7 @@ export function Services() {
                   flex: isOpen ? 1.8 : 1,
 
                   opacity: visible ? 1 : 0,
-                  transform: visible ? "translateX(0)" : "translateX(-32px)",
+                  transform: visible ? "translateX(0)" : "translateX(32px)",
 
                   transitionProperty: "flex, opacity, transform",
                   transitionDuration: "0.7s, 0.8s, 0.8s",
@@ -107,31 +107,13 @@ export function Services() {
                 }}
               >
                 <div
-                  className="h-full flex items-center justify-between"
+                  className="h-full flex items-center justify-end"
                   style={{
                     padding: "0 8px",
+                    gap: "32px",
                   }}
                 >
-                  {/* Left */}
-                  <div
-                    style={{
-                      transform: isOpen ? "translateX(0)" : "translateX(-8px)",
-                      transition: "transform 0.7s cubic-bezier(0.16,1,0.3,1)",
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: "clamp(22px,2vw,34px)",
-                        fontWeight: 600,
-                        color: "#496443",
-                        letterSpacing: "-0.03em",
-                      }}
-                    >
-                      {service.title}
-                    </p>
-                  </div>
-
-                  {/* Right */}
+                  {/* Left - description (aparece no hover) */}
                   <div
                     style={{
                       width: isOpen ? "40%" : "0%",
@@ -145,9 +127,31 @@ export function Services() {
                         color: "rgba(73,100,67,0.7)",
                         lineHeight: 1.6,
                         fontSize: "15px",
+                        textAlign: "right",
                       }}
                     >
                       {service.description}
+                    </p>
+                  </div>
+
+                  {/* Right - título */}
+                  <div
+                    style={{
+                      transform: isOpen ? "translateX(0)" : "translateX(8px)",
+                      transition: "transform 0.7s cubic-bezier(0.16,1,0.3,1)",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: "clamp(22px,2vw,34px)",
+                        fontWeight: 600,
+                        color: "#496443",
+                        letterSpacing: "-0.03em",
+                        textAlign: "right",
+                      }}
+                    >
+                      {service.title}
                     </p>
                   </div>
                 </div>

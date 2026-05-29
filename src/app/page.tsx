@@ -3,6 +3,7 @@ import { Services } from "../components/services/Services";
 import { Work } from "../components/work/Work";
 import { Experience } from "../components/experience/Experience";
 import { Comments } from "../components/comments/Comment";
+import { Contact } from "../components/contact/Contact";
 
 export default function Home() {
   return (
@@ -12,10 +13,10 @@ export default function Home() {
       <Work />
 
       <Experience />
-      
-      <Comments />
 
       <Services />
+
+      <Contact />
     </main>
   );
 }

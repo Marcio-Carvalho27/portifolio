@@ -5,9 +5,9 @@ import { experiences } from "./experience";
 
 
 export const navItems = [
-  { label: "Services", count: services.length },
   { label: "Work", count: projects.length },
   { label: "Experience", count: experiences.length },
+  { label: "Services", count: services.length },
   { label: "Contact", count: null },
 ];
 

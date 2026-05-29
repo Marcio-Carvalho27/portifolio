@@ -19,7 +19,7 @@ export function ServiceItem({ service, index, visible }: ServiceItemProps) {
         transform: visible ? "translateY(0)" : "translateY(32px)",
         transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${0.1 + index * 0.08}s,
                      transform 0.7s cubic-bezier(0.16,1,0.3,1) ${0.1 + index * 0.08}s`,
-        borderBottom: "1px solid rgba(73,100,67,0.15)",
+        borderBottom: "1px solid rgba(255,255,255,0.15)",
       }}
     >
       {/* Row */}
@@ -33,7 +33,7 @@ export function ServiceItem({ service, index, visible }: ServiceItemProps) {
             fontFamily: "'Oswald', sans-serif",
             fontSize: "clamp(22px, 3vw, 42px)",
             fontWeight: 700,
-            color: open ? "#496443" : "#1a1a1a",
+            color: open ? "#ffffff" : "rgba(255,255,255,0.6)",
             letterSpacing: "-0.01em",
             transition: "color 0.3s ease",
           }}
@@ -48,8 +48,8 @@ export function ServiceItem({ service, index, visible }: ServiceItemProps) {
             width: "clamp(32px, 3vw, 44px)",
             height: "clamp(32px, 3vw, 44px)",
             borderRadius: "50%",
-            border: `1px solid ${open ? "rgba(73,100,67,0.5)" : "rgba(73,100,67,0.2)"}`,
-            background: open ? "rgba(73,100,67,0.1)" : "transparent",
+            border: `1px solid ${open ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.2)"}`,
+            background: open ? "rgba(255,255,255,0.15)" : "transparent",
             transition: "all 0.3s ease",
           }}
         >
@@ -57,7 +57,7 @@ export function ServiceItem({ service, index, visible }: ServiceItemProps) {
             style={{
               display: "block",
               fontSize: "clamp(14px, 1.4vw, 20px)",
-              color: "#496443",
+              color: "#ffffff",
               transform: open ? "rotate(45deg)" : "rotate(0deg)",
               transition: "transform 0.35s cubic-bezier(0.16,1,0.3,1)",
               lineHeight: 1,
@@ -81,22 +81,23 @@ export function ServiceItem({ service, index, visible }: ServiceItemProps) {
             <p
               className="max-w-xl"
               style={{
-                color: "rgba(26,26,26,0.65)",
+                color: "rgba(255,255,255,0.65)",
                 fontSize: "clamp(13px, 1.1vw, 16px)",
                 lineHeight: 1.7,
               }}
             >
               {service.description}
             </p>
+
             <div className="flex flex-wrap gap-2">
               {service.tags.map((tag) => (
                 <span
                   key={tag}
                   className="text-xs font-medium rounded-full px-3 py-1"
                   style={{
-                    background: "rgba(73,100,67,0.08)",
-                    border: "1px solid rgba(73,100,67,0.2)",
-                    color: "#496443",
+                    background: "rgba(255,255,255,0.08)",
+                    border: "1px solid rgba(255,255,255,0.2)",
+                    color: "rgba(255,255,255,0.9)",
                   }}
                 >
                   {tag}
