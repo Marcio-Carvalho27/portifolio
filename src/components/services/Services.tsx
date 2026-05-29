@@ -13,9 +13,7 @@ export function Services() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-        }
+        setVisible(entry.isIntersecting);
       },
       { threshold: 0.2 }
     );
@@ -51,9 +49,7 @@ export function Services() {
           className="shrink-0"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible
-              ? "translateY(0)"
-              : "translateY(40px)",
+            transform: visible ? "translateY(0)" : "translateY(40px)",
             transition:
               "opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1)",
           }}
@@ -97,13 +93,17 @@ export function Services() {
                 onMouseLeave={() => setOpened(null)}
                 className="relative overflow-hidden cursor-pointer"
                 style={{
-                  borderBottom:
-                    "1px solid rgba(73,100,67,0.15)",
+                  borderBottom: "1px solid rgba(73,100,67,0.15)",
 
                   flex: isOpen ? 1.8 : 1,
 
-                  transition:
-                    "flex 0.7s cubic-bezier(0.16,1,0.3,1)",
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? "translateX(0)" : "translateX(-32px)",
+
+                  transitionProperty: "flex, opacity, transform",
+                  transitionDuration: "0.7s, 0.8s, 0.8s",
+                  transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
+                  transitionDelay: `0s, ${0.15 + i * 0.1}s, ${0.15 + i * 0.1}s`,
                 }}
               >
                 <div
@@ -115,14 +115,8 @@ export function Services() {
                   {/* Left */}
                   <div
                     style={{
-                      transform: isOpen
-                        ? "translateX(0)"
-                        : "translateX(-8px)",
-
-                      opacity: visible ? 1 : 0,
-
-                      transition:
-                        "all 0.7s cubic-bezier(0.16,1,0.3,1)",
+                      transform: isOpen ? "translateX(0)" : "translateX(-8px)",
+                      transition: "transform 0.7s cubic-bezier(0.16,1,0.3,1)",
                     }}
                   >
                     <p
@@ -142,11 +136,8 @@ export function Services() {
                     style={{
                       width: isOpen ? "40%" : "0%",
                       opacity: isOpen ? 1 : 0,
-
                       overflow: "hidden",
-
-                      transition:
-                        "all 0.7s cubic-bezier(0.16,1,0.3,1)",
+                      transition: "all 0.7s cubic-bezier(0.16,1,0.3,1)",
                     }}
                   >
                     <p

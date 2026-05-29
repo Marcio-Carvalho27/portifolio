@@ -17,43 +17,32 @@ export function Work() {
 
     if (!section || !track) return;
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(section);
+
     let current = 0;
     let target = 0;
     let animationFrame: number;
 
-    const lerp = (
-      start: number,
-      end: number,
-      factor: number
-    ) => {
+    const lerp = (start: number, end: number, factor: number) => {
       return start + (end - start) * factor;
     };
 
     const updateScroll = () => {
       const rect = section.getBoundingClientRect();
-
-      const scrollableHeight =
-        section.offsetHeight - window.innerHeight;
-
-      const scrollProgress = Math.min(
-        Math.max(-rect.top / scrollableHeight, 0),
-        1
-      );
-
-      const maxTranslate =
-        track.scrollWidth - window.innerWidth;
+      const scrollableHeight = section.offsetHeight - window.innerHeight;
+      const scrollProgress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
+      const maxTranslate = track.scrollWidth - window.innerWidth;
 
       target = maxTranslate * scrollProgress;
-
-      current = lerp(current, target, 0.50);
-
+      current = lerp(current, target, 0.08);
       track.style.transform = `translate3d(${-current}px,0,0)`;
-
       setProgress(current / maxTranslate || 0);
-
-      if (scrollProgress > 0.03) {
-        setVisible(true);
-      }
 
       animationFrame = requestAnimationFrame(updateScroll);
     };
@@ -62,6 +51,7 @@ export function Work() {
 
     return () => {
       cancelAnimationFrame(animationFrame);
+      observer.disconnect();
     };
   }, []);
 
@@ -89,9 +79,7 @@ export function Work() {
           className="px-10 lg:px-16 pt-16 pb-10"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible
-              ? "translateY(0px)"
-              : "translateY(40px)",
+            transform: visible ? "translateY(0px)" : "translateY(40px)",
             transition:
               "opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1)",
           }}

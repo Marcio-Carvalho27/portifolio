@@ -8,9 +8,9 @@ export default function Home() {
     <main>
       <Hero />
 
-      <Work />
-
       <Services />
+
+      <Work />
 
       <Experience />
     </main>

@@ -1,26 +1,5 @@
 export const experiences = [
   {
-    id: "english",
-
-    company: "Malvern House — Brighton, UK",
-
-    role: "General English Student",
-
-    period: "2023 — 2023",
-  },
-
-  {
-    id: "ufba",
-
-    company:
-      "Federal University of Bahia — UFBA",
-
-    role: "Computer Science Student",
-
-    period: "2023 — present",
-  },
-
-  {
     id: "outlier",
 
     company: "Outlier AI",
@@ -33,7 +12,7 @@ export const experiences = [
   {
     id: "icUFBA",
 
-    company: "UFBA",
+    company: "Federal University of Bahia (UFBA)",
 
     role: "Researcher",
 
