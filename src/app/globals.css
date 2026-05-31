@@ -31,3 +31,11 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+.nav-light {
+  color: #1c1c1a;
+}
+
+.nav-dark {
+  color: #e8e8e4;
+}
