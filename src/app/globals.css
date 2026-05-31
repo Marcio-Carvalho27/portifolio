@@ -1,13 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #FFFFFF;
-  --foreground: #191919;
+  --background: #F7F7F5;
+  --foreground: #1C1C1A;
   --primary: #496443;
 }
 
-*, *::before, *::after {
+.dark {
+  --background: #141412;
+  --foreground: #E8E8E4;
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -17,10 +26,22 @@ html {
 
 body {
   background: var(--background);
+
   color: var(--foreground);
-  font-family: "Inter", system-ui, sans-serif;
+
+  font-family:
+    "Inter",
+    system-ui,
+    sans-serif;
+
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+
+  -webkit-font-smoothing:
+    antialiased;
+
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
 }
 
 button {
