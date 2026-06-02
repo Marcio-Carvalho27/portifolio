@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 
 const STACKS = [
   "React",
@@ -19,702 +15,181 @@ const STACKS = [
   "AWS",
 ];
 
+const SHAPE_TYPES = [
+  "circle",
+  "semi-top",
+  "semi-bottom",
+  "semi-left",
+  "semi-right",
+  "quarter-tl",
+  "quarter-tr",
+  "quarter-bl",
+  "quarter-br",
+  "leaf-tl",
+  "leaf-tr",
+  "leaf-bl",
+  "leaf-br",
+] as const;
+
+type ShapeType = (typeof SHAPE_TYPES)[number];
+
+type TileData = {
+  id: number;
+  primaryShape: ShapeType;
+  secondaryShape: ShapeType;
+  rotation: number;
+  active: boolean;
+  toneVariant: 0 | 1 | 2;
+};
+
+function getColumns() {
+  if (typeof window === "undefined") return 12;
+  if (window.innerWidth <= 640) return 6;
+  if (window.innerWidth <= 900) return 8;
+  return 12;
+}
+
+function randomShape(): ShapeType {
+  return SHAPE_TYPES[Math.floor(Math.random() * SHAPE_TYPES.length)];
+}
+
+function randomRotation() {
+  return [0, 90, 180, 270][Math.floor(Math.random() * 4)];
+}
+
+function createTiles(total: number): TileData[] {
+  return Array.from({ length: total }, (_, index) => ({
+    id: index,
+    primaryShape: randomShape(),
+    secondaryShape: randomShape(),
+    rotation: randomRotation(),
+    active: false,
+    toneVariant: Math.floor(Math.random() * 3) as 0 | 1 | 2,
+  }));
+}
+
 export function Hero() {
-  const sectionRef =
-    useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  const contentRef =
-    useRef<HTMLDivElement>(null);
-
-  const marqueeRef =
-    useRef<HTMLDivElement>(null);
-
-  const ballRef =
-    useRef<HTMLDivElement>(null);
-
-  const paddleRef =
-    useRef<HTMLDivElement>(null);
-
-  const mouseX = useRef(0);
-
-  const animationRef =
-    useRef<number | null>(null);
-
-  const scoreRef = useRef(0);
-
-  const bestScoreRef =
-    useRef(0);
-
-  const ballData = useRef({
-    x: 0,
-    y: 0,
-    vx: 4,
-    vy: -4,
-  });
-
-  const [started, setStarted] =
-    useState(false);
-
-  const [score, setScore] =
-    useState(0);
-
-  const [bestScore, setBestScore] =
-    useState(() => {
-      if (typeof window === "undefined") {
-        return 0;
-      }
-
-      return Number(localStorage.getItem("hero-best-score") ?? 0);
-    });
-
-  const letterHits =
-    useRef<Record<number, number>>(
-      {}
-    );
-
-  const brokenLetters =
-    useRef<Set<number>>(
-      new Set()
-    );
-
-  const letterTimeouts = useRef(
-    new WeakMap<
-      HTMLElement,
-      ReturnType<typeof setTimeout>
-    >()
-  );
-
-  const paddleWidth =
-    typeof window !== "undefined"
-      ? window.innerWidth < 768
-        ? 90
-        : 120
-      : 120;
-
-  // KEEP REFS UPDATED
-  useEffect(() => {
-    scoreRef.current = score;
-  }, [score]);
+  const [columns, setColumns] = useState(12);
+  const [tileSize, setTileSize] = useState(0);
+  const [tiles, setTiles] = useState<TileData[]>([]);
 
   useEffect(() => {
-    bestScoreRef.current =
-      bestScore;
-  }, [bestScore]);
+    function recalculate() {
+      const cols = getColumns();
+      const size = window.innerWidth / cols;
+      const rows = Math.ceil(window.innerHeight / size) + 1;
 
-  // SCROLL EFFECT
-  useEffect(() => {
-    const onScroll = () => {
-      const section =
-        sectionRef.current;
-
-      const content =
-        contentRef.current;
-
-      if (!section || !content) {
-        return;
-      }
-
-      const scrollY = window.scrollY;
-
-      const sectionH =
-        section.offsetHeight;
-
-      const progress = Math.min(
-        1,
-        Math.max(
-          0,
-          scrollY / sectionH
-        )
-      );
-
-      const translateY =
-        -(progress * 60);
-
-      const opacity =
-        1 - progress * 1.6;
-
-      const scale =
-        1 - progress * 0.04;
-
-      const blur =
-        progress * 8;
-
-      content.style.transform = `
-        translateY(${translateY}px)
-        scale(${scale})
-      `;
-
-      content.style.opacity =
-        String(
-          Math.max(0, opacity)
-        );
-
-      content.style.filter = `
-        blur(${blur}px)
-      `;
-    };
-
-    window.addEventListener(
-      "scroll",
-      onScroll,
-      {
-        passive: true,
-      }
-    );
-
-    return () =>
-      window.removeEventListener(
-        "scroll",
-        onScroll
-      );
-  }, []);
-
-  // MARQUEE WIDTH
-  useEffect(() => {
-    const updateWidth = () => {
-      if (!marqueeRef.current) {
-        return;
-      }
-
-      marqueeRef.current.style.width =
-        "min(100vw - 32px, 1200px)";
-    };
-
-    updateWidth();
-
-    window.addEventListener(
-      "resize",
-      updateWidth
-    );
-
-    return () =>
-      window.removeEventListener(
-        "resize",
-        updateWidth
-      );
-  }, []);
-
-  // PADDLE MOUSE
-  useEffect(() => {
-    const handleMouseMove = (
-      e: MouseEvent
-    ) => {
-      mouseX.current = e.clientX;
-
-      if (paddleRef.current) {
-        paddleRef.current.style.transform = `
-          translateX(${
-            e.clientX -
-            paddleWidth / 2
-          }px)
-        `;
-      }
-    };
-
-    window.addEventListener(
-      "mousemove",
-      handleMouseMove
-    );
-
-    return () =>
-      window.removeEventListener(
-        "mousemove",
-        handleMouseMove
-      );
-  }, [paddleWidth]);
-
-  // TOUCH SUPPORT
-  useEffect(() => {
-    const handleTouchMove = (
-      e: TouchEvent
-    ) => {
-      const touch =
-        e.touches[0];
-
-      mouseX.current =
-        touch.clientX;
-
-      if (paddleRef.current) {
-        paddleRef.current.style.transform = `
-          translateX(${
-            touch.clientX -
-            paddleWidth / 2
-          }px)
-        `;
-      }
-    };
-
-    window.addEventListener(
-      "touchmove",
-      handleTouchMove,
-      {
-        passive: true,
-      }
-    );
-
-    return () =>
-      window.removeEventListener(
-        "touchmove",
-        handleTouchMove
-      );
-  }, [paddleWidth]);
-
-  // START GAME
-  useEffect(() => {
-    const handleKeyDown = (
-      e: KeyboardEvent
-    ) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-
-        e.stopPropagation();
-
-        setStarted(true);
-      }
-    };
-
-    const handleClick = () => {
-      setStarted(true);
-    };
-
-    window.addEventListener(
-      "keydown",
-      handleKeyDown
-    );
-
-    window.addEventListener(
-      "click",
-      handleClick
-    );
-
-    return () => {
-      window.removeEventListener(
-        "keydown",
-        handleKeyDown
-      );
-
-      window.removeEventListener(
-        "click",
-        handleClick
-      );
-    };
-  }, []);
-
-  // GAME LOOP
-  useEffect(() => {
-    const ball =
-      ballData.current;
-
-    if (
-      ball.x === 0 &&
-      ball.y === 0
-    ) {
-      ball.x =
-        window.innerWidth / 2;
-
-      ball.y =
-        window.innerHeight - 120;
+      setColumns(cols);
+      setTileSize(size);
+      setTiles(createTiles(cols * rows));
     }
 
-    const animate = () => {
-      const ballEl =
-        ballRef.current;
+    recalculate();
+    window.addEventListener("resize", recalculate);
 
-      if (!ballEl) {
-        animationRef.current =
-          requestAnimationFrame(
-            animate
-          );
+    return () => window.removeEventListener("resize", recalculate);
+  }, []);
 
-        return;
-      }
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTiles((previous) => {
+        if (!previous.length) return previous;
 
-      const paddleY =
-        window.innerHeight - 80;
+        const updated = [...previous];
+        const amount = Math.floor(Math.random() * 4) + 1;
+        const indexes = new Set<number>();
 
-      const paddleX =
-        mouseX.current -
-        paddleWidth / 2;
+        while (indexes.size < amount) {
+          indexes.add(Math.floor(Math.random() * updated.length));
+        }
 
-      const paddleHeight = 12;
+        indexes.forEach((index) => {
+          const tile = updated[index];
 
-      // BEFORE START
-      if (!started) {
-        ball.x =
-          paddleX +
-          paddleWidth / 2 -
-          5;
+          updated[index] = {
+            ...tile,
+            rotation: tile.rotation + 90,
+            active: true,
+          };
 
-        ball.y =
-          paddleY - 18;
-
-        ballEl.style.transform = `
-          translate3d(
-            ${ball.x}px,
-            ${ball.y}px,
-            0
-          )
-        `;
-
-        animationRef.current =
-          requestAnimationFrame(
-            animate
-          );
-
-        return;
-      }
-
-      ball.x += ball.vx;
-      ball.y += ball.vy;
-
-      // WALL COLLISION
-      if (
-        ball.x <= 0 ||
-        ball.x >=
-          window.innerWidth - 10
-      ) {
-        ball.vx *= -1;
-      }
-
-      if (ball.y <= 0) {
-        ball.vy *= -1;
-      }
-
-      // PADDLE COLLISION
-      if (
-        ball.y + 10 >=
-          paddleY &&
-        ball.y <=
-          paddleY +
-            paddleHeight &&
-        ball.x + 10 >=
-          paddleX &&
-        ball.x <=
-          paddleX + paddleWidth
-      ) {
-        ball.vy =
-          -Math.abs(ball.vy);
-
-        const hit =
-          (ball.x -
-            (paddleX +
-              paddleWidth / 2)) /
-          (paddleWidth / 2);
-
-        ball.vx += hit * 1.4;
-      }
-
-      // GAME OVER
-      if (
-        ball.y >
-        window.innerHeight + 50
-      ) {
-        setStarted(false);
-
-        setScore(0);
-
-        letterHits.current = {};
-
-        brokenLetters.current.clear();
-
-        const letters =
-          document.querySelectorAll(
-            ".hero-letter"
-          );
-
-        letters.forEach((letter) => {
-          const el =
-            letter as HTMLElement;
-
-          el.style.opacity = "1";
-
-          el.style.transform =
-            "scale(1)";
-
-          el.style.filter = "none";
+          window.setTimeout(() => {
+            setTiles((current) =>
+              current.map((item) =>
+                item.id === tile.id ? { ...item, active: false } : item
+              )
+            );
+          }, 3200);
         });
 
-        ball.vx = 4;
-        ball.vy = -4;
-      }
+        return updated;
+      });
+    }, 6000);
 
-      // LETTER COLLISION
-      const letters =
-        document.querySelectorAll(
-          ".hero-letter"
-        );
+    return () => clearInterval(interval);
+  }, []);
 
-      letters.forEach(
-        (letter, index) => {
-          if (
-            brokenLetters.current.has(
-              index
-            )
-          ) {
-            return;
-          }
+  useEffect(() => {
+    const onScroll = () => {
+      const section = sectionRef.current;
+      const content = contentRef.current;
 
-          const rect =
-            letter.getBoundingClientRect();
+      if (!section || !content) return;
 
-          const padding =
-            window.innerWidth < 768
-              ? 8
-              : 18;
+      const progress = Math.min(1, Math.max(0, window.scrollY / section.offsetHeight));
 
-          const left =
-            rect.left + padding;
-
-          const right =
-            rect.right - padding;
-
-          const top =
-            rect.top + padding;
-
-          const bottom =
-            rect.bottom - padding;
-
-          const collided =
-            ball.x + 10 > left &&
-            ball.x < right &&
-            ball.y + 10 > top &&
-            ball.y < bottom;
-
-          if (!collided) {
-            return;
-          }
-
-          ball.vy *= -1;
-
-          // SCORE
-          const nextScore =
-            scoreRef.current + 1;
-
-          scoreRef.current =
-            nextScore;
-
-          setScore(nextScore);
-
-          // BEST SCORE
-          if (
-            nextScore >
-            bestScoreRef.current
-          ) {
-            bestScoreRef.current =
-              nextScore;
-
-            setBestScore(
-              nextScore
-            );
-
-            localStorage.setItem(
-              "hero-best-score",
-              String(nextScore)
-            );
-          }
-
-          // SPEED
-          ball.vx *= 1.001;
-          ball.vy *= 1.001;
-
-          // LETTER LIFE
-          const currentHits =
-            (letterHits.current[
-              index
-            ] || 0) + 1;
-
-          letterHits.current[
-            index
-          ] = currentHits;
-
-          const el =
-            letter as HTMLElement;
-
-          const opacity =
-            Math.max(
-              0,
-              1 -
-                currentHits / 10
-            );
-
-          el.style.opacity =
-            String(opacity);
-
-          el.style.transform =
-            "scale(1.14)";
-
-          el.style.transition = `
-            transform 120ms cubic-bezier(0.16,1,0.3,1),
-            opacity 220ms ease,
-            filter 220ms ease
-          `;
-
-          const previousTimeout =
-            letterTimeouts.current.get(
-              el
-            );
-
-          if (previousTimeout) {
-            clearTimeout(
-              previousTimeout
-            );
-          }
-
-          letterTimeouts.current.set(
-            el,
-            setTimeout(() => {
-              el.style.transform =
-                "scale(1)";
-            }, 120)
-          );
-
-          // BREAK LETTER
-          if (
-            currentHits >= 10
-          ) {
-            brokenLetters.current.add(
-              index
-            );
-
-            el.style.opacity = "0";
-
-            el.style.transform =
-              "scale(0.6) rotate(8deg)";
-
-            el.style.filter =
-              "blur(8px)";
-          }
-        }
-      );
-
-      // LIMIT SPEED
-      ball.vx = Math.max(
-        -12,
-        Math.min(12, ball.vx)
-      );
-
-      ball.vy = Math.max(
-        -12,
-        Math.min(12, ball.vy)
-      );
-
-      ballEl.style.transform = `
-        translate3d(
-          ${ball.x}px,
-          ${ball.y}px,
-          0
-        )
-      `;
-
-      animationRef.current =
-        requestAnimationFrame(
-          animate
-        );
+      content.style.transform = `translateY(${-(progress * 48)}px)`;
+      content.style.opacity = String(Math.max(0, 1 - progress * 1.3));
     };
 
-    animationRef.current =
-      requestAnimationFrame(
-        animate
-      );
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
 
-    return () => {
-      if (
-        animationRef.current
-      ) {
-        cancelAnimationFrame(
-          animationRef.current
-        );
-      }
-    };
-  }, [
-    started,
-    paddleWidth,
-  ]);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className="site-section hero-section"
-    >
+    <section ref={sectionRef} className="site-section hero-section">
       <div
-        ref={ballRef}
-        className="hero-ball"
-      />
-
-      <div
-        ref={paddleRef}
-        className="hero-paddle"
+        className="hero-grid"
+        aria-hidden
         style={{
-          width: `${paddleWidth}px`,
+          gridTemplateColumns: `repeat(${columns}, ${tileSize}px)`,
+          gridAutoRows: `${tileSize}px`,
         }}
-      />
-
-      <div className="hero-score">
-        {!started && (
-          <span>
-            Press Enter / Tap
-          </span>
-        )}
-
-        <span>
-          Score {score}
-        </span>
-
-        <span>
-          Best {bestScore}
-        </span>
+      >
+        {tiles.map((tile) => (
+          <div
+            key={tile.id}
+            className={`hero-tile tone-${tile.toneVariant} ${
+              tile.active ? "is-active" : ""
+            }`}
+            style={{ "--rotation": `${tile.rotation}deg` } as React.CSSProperties}
+          >
+            <div className={`shape primary ${tile.primaryShape}`} />
+            <div className={`shape secondary ${tile.secondaryShape}`} />
+          </div>
+        ))}
       </div>
 
-      <div
-        ref={contentRef}
-        className="hero-content"
-      >
+      <div className="hero-overlay" />
+
+      <div ref={contentRef} className="hero-content">
         <div className="hero-content-inner">
-          <h1 className="hero-title">
-            {"MARCIO CARVALHO"
-              .split("")
-              .map(
-                (char, index) => (
-                  <span
-                    key={index}
-                    className={[
-                      "hero-letter",
-                      index < 6 && char !== " "
-                        ? "hero-letter-outline"
-                        : "",
-                      char === " "
-                        ? "hero-letter-space"
-                        : "",
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                  >
-                    {char}
-                  </span>
-                )
-              )}
-          </h1>
+          <p className="hero-kicker">Full Stack Developer</p>
 
-          {/* STACKS */}
-          <div
-            ref={marqueeRef}
-            className="hero-marquee"
-          >
+          <h1 className="hero-title">Marcio Carvalho</h1>
+
+          <div className="hero-marquee" aria-label="Tecnologias">
             <div className="hero-marquee-track">
-              {[...STACKS, ...STACKS].map(
-                (stack, index) => (
-                  <div
-                    key={`${stack}-${index}`}
-                    className="hero-stack"
-                  >
-                    <span className="hero-stack-label">
-                      {stack}
-                    </span>
-
-                    <span className="hero-stack-dot" />
-                  </div>
-                )
-              )}
+              {[...STACKS, ...STACKS].map((stack, index) => (
+                <div key={`${stack}-${index}`} className="hero-stack">
+                  <span>{stack}</span>
+                  <span className="hero-stack-dot" />
+                </div>
+              ))}
             </div>
           </div>
         </div>

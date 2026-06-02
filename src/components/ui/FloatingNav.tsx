@@ -143,7 +143,9 @@ export function FloatingNav() {
   };
 
   const dynamicTextColor =
-    theme === "dark" || isExperienceSection ? "text-white" : "text-black";
+    theme === "dark" || isExperienceSection || !pastHero
+      ? "text-white"
+      : "text-black";
 
   if (!mounted) {
     return null;
