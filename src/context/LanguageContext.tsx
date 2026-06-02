@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useState } from "react";
 
 import en from "@/src/messages/en.json";
 import pt from "@/src/messages/pt.json";
@@ -34,15 +29,13 @@ export function LanguageProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [locale, setLocale] = useState<Locale>("en");
-
-  useEffect(() => {
-    const saved = localStorage.getItem("locale") as Locale | null;
-
-    if (saved) {
-      setLocale(saved);
+  const [locale, setLocale] = useState<Locale>(() => {
+    if (typeof window === "undefined") {
+      return "en";
     }
-  }, []);
+
+    return (localStorage.getItem("locale") as Locale | null) ?? "en";
+  });
 
   const toggleLocale = () => {
     const next = locale === "en" ? "pt" : "en";

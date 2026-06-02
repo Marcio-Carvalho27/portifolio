@@ -1,9 +1,9 @@
-import { Hero } from "../components/hero/Hero";
-import { Services } from "../components/services/Services";
-import { Work } from "../components/work/Work";
-import { Experience } from "../components/experience/Experience";
-import { Contact } from "../components/contact/Contact";
-import { FloatingNav } from "../components/common/FloatingNav";
+import { FloatingNav } from "@/src/components/ui/FloatingNav";
+import { Contact } from "@/src/components/sections/Contact";
+import { Experience } from "@/src/components/sections/Experience";
+import { Hero } from "@/src/components/sections/Hero";
+import { Services } from "@/src/components/sections/Services";
+import { Work } from "@/src/components/sections/Work";
 
 export default function Home() {
   return (

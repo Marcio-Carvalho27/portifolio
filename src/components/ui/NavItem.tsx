@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { useCountUp } from "@/src/lib/useCountUp";
+import { useCountUp } from "@/src/hooks/useCountUp";
 
 interface NavItemProps {
   label: string;
@@ -30,12 +30,7 @@ export function NavItem({
   return (
     <a
       href={`#${label.toLowerCase()}`}
-      className="
-        flex items-center gap-1.5
-        text-sm font-medium
-        transition-colors duration-300
-        hover:opacity-50
-      "
+      className="nav-item"
     >
       <span className={textColor}>
         {label}
@@ -43,12 +38,7 @@ export function NavItem({
 
       {count !== null && (
         <span
-          className={`
-            text-xs
-            font-normal
-            transition-colors duration-300
-            ${textColor}
-          `}
+          className={`nav-count ${textColor}`}
         >
           [
           <span ref={ref}>
