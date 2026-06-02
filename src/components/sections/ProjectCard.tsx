@@ -6,6 +6,7 @@ import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 
 import { projects } from "@/src/content/projects";
+import { useLanguage } from "@/src/context/LanguageContext";
 
 interface ProjectCardProps {
   project: (typeof projects)[0];
@@ -15,6 +16,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, index, visible }: ProjectCardProps) {
   const [hovered, setHovered] = useState(false);
+  const { t } = useLanguage();
   const hasLink = Boolean(project.href);
 
   const className = [
@@ -31,7 +33,7 @@ export function ProjectCard({ project, index, visible }: ProjectCardProps) {
     onMouseLeave: () => setHovered(false),
     className,
     style: {
-      transitionDelay: `${0.15 + index * 0.1}s`,
+      transitionDelay: `${0.12 + index * 0.08}s`,
     } satisfies CSSProperties,
   };
 
@@ -43,7 +45,7 @@ export function ProjectCard({ project, index, visible }: ProjectCardProps) {
             src={project.image}
             alt={project.title}
             fill
-            sizes="(max-width: 768px) 82vw, 34vw"
+            sizes="(max-width: 768px) 92vw, (max-width: 1200px) 44vw, 22vw"
             className="project-card-image"
           />
         ) : (
@@ -53,11 +55,11 @@ export function ProjectCard({ project, index, visible }: ProjectCardProps) {
 
       <div className="project-card-overlay" />
       <div className="project-card-ring" />
-      <span className="project-card-badge">{project.type}</span>
+      <span className="project-card-badge">{t(project.typeKey)}</span>
 
       <div className="project-card-content">
         <h3 className="project-card-title">{project.title}</h3>
-        <p className="project-card-description">{project.description}</p>
+        <p className="project-card-description">{t(project.descriptionKey)}</p>
 
         <div className="tag-list">
           {project.tags.map((tag) => (

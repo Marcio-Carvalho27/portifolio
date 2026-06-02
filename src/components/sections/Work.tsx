@@ -1,103 +1,95 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useMemo, useState } from "react";
 
 import { ProjectCard } from "@/src/components/sections/ProjectCard";
 import { projects } from "@/src/content/projects";
+import { useLanguage } from "@/src/context/LanguageContext";
+import { useInView } from "@/src/hooks/useInView";
 
 export function Work() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const { ref, visible } = useInView<HTMLElement>(0.12);
+  const { t } = useLanguage();
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const [visible, setVisible] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const progress = useMemo(() => {
+    return (activeIndex + 1) / projects.length;
+  }, [activeIndex]);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    const track = trackRef.current;
-
-    if (!section || !track) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { threshold: 0.1 }
+  const previousProject = () => {
+    setActiveIndex((current) =>
+      current === 0 ? projects.length - 1 : current - 1
     );
+  };
 
-    observer.observe(section);
-
-    let current = 0;
-    let target = 0;
-    let animationFrame = 0;
-
-    const updateScroll = () => {
-      const rect = section.getBoundingClientRect();
-      const scrollableHeight = section.offsetHeight - window.innerHeight;
-      const scrollProgress = Math.min(
-        Math.max(-rect.top / scrollableHeight, 0),
-        1
-      );
-      const maxTranslate = Math.max(track.scrollWidth - window.innerWidth, 0);
-
-      target = maxTranslate * scrollProgress;
-      current += (target - current) * 0.08;
-
-      if (window.innerWidth > 768) {
-        track.style.transform = `translate3d(${-current}px,0,0)`;
-      }
-
-      setProgress(maxTranslate ? current / maxTranslate : 0);
-      animationFrame = requestAnimationFrame(updateScroll);
-    };
-
-    updateScroll();
-
-    return () => {
-      cancelAnimationFrame(animationFrame);
-      observer.disconnect();
-    };
-  }, []);
+  const nextProject = () => {
+    setActiveIndex((current) =>
+      current === projects.length - 1 ? 0 : current + 1
+    );
+  };
 
   return (
-    <section
-      ref={sectionRef}
-      id="work"
-      className="work-section"
-      style={{ height: `${projects.length * 110}vh` }}
-    >
-      <div className="work-sticky">
-        <div className="section-divider" />
+    <section ref={ref} id="work" className="site-section work-section">
+      <div className="section-divider" />
 
-        <div
-          className={`section-header section-shell ${
-            visible ? "is-visible" : ""
-          }`}
-        >
-          <p className="section-kicker">Portfolio</p>
-          <h2 className="section-title">/Work.</h2>
-        </div>
+      <div className="work-carousel-shell">
+        <div className={`work-header ${visible ? "is-visible" : ""}`}>
+          <p className="section-kicker">{t("work.kicker")}</p>
+          <div className="work-heading-row">
+            <h2 className="section-title">{t("work.title")}</h2>
 
-        <div className="work-track-wrap">
-          <div ref={trackRef} className="work-track">
-            {projects.map((project, index) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                index={index}
-                visible={visible}
-              />
-            ))}
+            <div className="work-controls" aria-label="Project carousel">
+              <button
+                type="button"
+                onClick={previousProject}
+                className="work-control"
+                aria-label="Previous project"
+              >
+                <ChevronLeft size={20} />
+              </button>
 
-            <div className="work-spacer" />
+              <button
+                type="button"
+                onClick={nextProject}
+                className="work-control"
+                aria-label="Next project"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="work-progress">
+        <div className="work-carousel-viewport">
           <div
-            className="work-progress-bar"
-            style={{ transform: `scaleX(${progress})` }}
-          />
+            className="work-carousel-track"
+            style={{ transform: `translateX(calc(${activeIndex} * -100%))` }}
+          >
+            {projects.map((project, index) => (
+              <div key={project.id} className="work-carousel-slide">
+                <ProjectCard
+                  project={project}
+                  index={index}
+                  visible={visible}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="work-footer">
+          <span className="work-counter">
+            {String(activeIndex + 1).padStart(2, "0")} /{" "}
+            {String(projects.length).padStart(2, "0")}
+          </span>
+
+          <div className="work-progress">
+            <div
+              className="work-progress-bar"
+              style={{ transform: `scaleX(${progress})` }}
+            />
+          </div>
         </div>
       </div>
     </section>

@@ -1,8 +1,8 @@
 export type Project = {
   id: number;
-  type: "Real Project" | "Study" | "Hackathon";
+  typeKey: "project.type.real" | "project.type.study" | "project.type.hackathon";
   title: string;
-  description: string;
+  descriptionKey: string;
   image?: string;
   tags: string[];
   href?: string;
@@ -11,37 +11,34 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: 1,
-    type: "Real Project",
+    typeKey: "project.type.real",
     title: "Rito",
-    description:
-      "Table setting e-commerce built from scratch — from Figma layout to deployment and Mercado Pago payment integration.",
+    descriptionKey: "project.rito.description",
     image: "/projects/rito.png",
     tags: ["React", "Django", "Python", "Figma", "Mercado Pago"],
   },
   {
     id: 2,
-    type: "Real Project",
+    typeKey: "project.type.real",
     title: "MobMetrics",
-    description:
-      "Modular platform for computing and visualizing urban mobility metrics, making it easier to understand how people and vehicles move through a city.",
+    descriptionKey: "project.mobmetrics.description",
     image: "/projects/mobmetrics.png",
     tags: ["Python", "Django", "Machine Learning", "Data Pipelines"],
     href: "https://github.com/Marcio-Carvalho27/MobMetrics",
   },
   {
     id: 3,
-    type: "Hackathon",
+    typeKey: "project.type.hackathon",
     title: "SemeAI",
-    description:
-      "Plant recommendation system based on climate forecasting and soil analysis, developed to support family farmers in the state of Bahia.",
-    tags: ["IA", "Machine Learning", "Python"],
+    descriptionKey: "project.semeai.description",
+    tags: ["AI", "Machine Learning", "Python"],
     href: "https://github.com/LucasMota10/SemeAI-Hackathon",
   },
   {
     id: 4,
-    type: "Real Project",
-    title: "Portifólio",
-    description: "Personal Portifolio, you are already on it.",
+    typeKey: "project.type.real",
+    title: "Portfolio",
+    descriptionKey: "project.portfolio.description",
     image: "/projects/portifolio.png",
     tags: ["Next.js"],
     href: "https://marcio-carvalho27.com.br/",

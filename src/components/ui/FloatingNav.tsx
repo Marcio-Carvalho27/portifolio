@@ -180,6 +180,7 @@ export function FloatingNav() {
                 <NavItem
                   key={item.key}
                   label={t(item.key)}
+                  href={item.href}
                   count={item.count}
                   textColor={dynamicTextColor}
                 />

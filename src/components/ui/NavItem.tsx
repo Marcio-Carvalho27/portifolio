@@ -6,6 +6,7 @@ import { useCountUp } from "@/src/hooks/useCountUp";
 
 interface NavItemProps {
   label: string;
+  href: string;
   count: number | null;
   textColor: string;
 }
@@ -14,6 +15,7 @@ const animatedItems = new Set<string>();
 
 export function NavItem({
   label,
+  href,
   count,
   textColor,
 }: NavItemProps) {
@@ -29,7 +31,7 @@ export function NavItem({
 
   return (
     <a
-      href={`#${label.toLowerCase()}`}
+      href={href}
       className="nav-item"
     >
       <span className={textColor}>

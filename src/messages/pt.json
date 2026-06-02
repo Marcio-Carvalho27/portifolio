@@ -1,7 +1,23 @@
 {
   "hero.role": "Desenvolvedor Full Stack",
-  "hero.description": "Criando produtos digitais modernos — de sites a aplicativos mobile.",
-  "hero.cta": "Entre em Contato ↗",
+  "hero.description": "Criando produtos digitais modernos - de sites a aplicativos mobile.",
+  "hero.cta": "Entre em contato",
+
+  "about.kicker": "Sobre mim",
+  "about.title": "Transformando ideias em produtos digitais claros.",
+  "about.paragraph1": "Sou um desenvolvedor full-stack focado em construir produtos digitais limpos, úteis e escaláveis. Meu trabalho conecta interface, backend, dados e pensamento de produto.",
+  "about.paragraph2": "Gosto de interfaces silenciosas, arquitetura clara e experiências que tornam fluxos complexos mais diretos. O objetivo é sempre o mesmo: entregar software bonito, funcional e confiável.",
+
+  "work.kicker": "Portfólio",
+  "work.title": "/Projetos.",
+
+  "project.type.real": "Projeto real",
+  "project.type.study": "Estudo",
+  "project.type.hackathon": "Hackathon",
+  "project.rito.description": "E-commerce de mesa posta construído do zero, do layout no Figma ao deploy e integração com Mercado Pago.",
+  "project.mobmetrics.description": "Plataforma modular para calcular e visualizar métricas de mobilidade urbana, facilitando a leitura de fluxos de pessoas e veículos na cidade.",
+  "project.semeai.description": "Sistema de recomendação de plantio baseado em previsão climática e análise de solo, criado para apoiar agricultores familiares da Bahia.",
+  "project.portfolio.description": "Portfólio pessoal criado com Next.js, focado em identidade visual, interação e arquitetura front-end.",
 
   "nav.about": "Sobre",
   "nav.work": "Projetos",
