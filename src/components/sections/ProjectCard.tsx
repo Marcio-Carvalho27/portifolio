@@ -2,7 +2,6 @@
 
 import type { CSSProperties } from "react";
 import { useState } from "react";
-import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 
 import { projects } from "@/src/content/projects";
@@ -18,6 +17,7 @@ export function ProjectCard({ project, index, visible }: ProjectCardProps) {
   const [hovered, setHovered] = useState(false);
   const { t } = useLanguage();
   const hasLink = Boolean(project.href);
+  const linkLabel = t("project.view");
 
   const className = [
     "project-card",
@@ -45,36 +45,41 @@ export function ProjectCard({ project, index, visible }: ProjectCardProps) {
             src={project.image}
             alt={project.title}
             fill
-            sizes="(max-width: 768px) 92vw, (max-width: 1200px) 44vw, 22vw"
+            sizes="(max-width: 768px) 92vw, 1080px"
             className="project-card-image"
           />
         ) : (
-          <div className="project-card-fallback" />
+          <div className="project-card-fallback">
+            <span>{project.title}</span>
+          </div>
         )}
-      </div>
 
-      <div className="project-card-overlay" />
-      <div className="project-card-ring" />
-      <span className="project-card-badge">{t(project.typeKey)}</span>
-
-      <div className="project-card-content">
-        <h3 className="project-card-title">{project.title}</h3>
-        <p className="project-card-description">{t(project.descriptionKey)}</p>
-
-        <div className="tag-list">
-          {project.tags.map((tag) => (
-            <span key={tag} className="tag tag-on-image">
-              {tag}
+        {hasLink && (
+          <span className="project-card-link">
+            {linkLabel}
+            <span className="project-card-link-icon" aria-hidden>
+              &rarr;
             </span>
-          ))}
+          </span>
+        )}
+
+        <div className="project-card-content">
+          <h3 className="project-card-title project-title">{project.title}</h3>
+          <p className="project-card-description">
+            {t(project.descriptionKey)}
+          </p>
+
+          <div className="tag-list">
+            {project.tags.map((tag) => (
+              <span key={tag} className="tag tag-on-image">
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
-      {hasLink && (
-        <span className="project-card-link-icon" aria-hidden>
-          <ExternalLink size={16} />
-        </span>
-      )}
+      <div className="project-card-ring" />
     </>
   );
 

@@ -1,21 +1,41 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ProjectCard } from "@/src/components/sections/ProjectCard";
 import { projects } from "@/src/content/projects";
 import { useLanguage } from "@/src/context/LanguageContext";
-import { useInView } from "@/src/hooks/useInView";
+
+function useInViewOnce<T extends HTMLElement>(threshold = 0.12) {
+  const ref = useRef<T>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return { ref, visible };
+}
 
 export function Work() {
-  const { ref, visible } = useInView<HTMLElement>(0.12);
+  const { ref, visible } = useInViewOnce<HTMLElement>(0.12);
   const { t } = useLanguage();
   const [activeIndex, setActiveIndex] = useState(0);
-
-  const progress = useMemo(() => {
-    return (activeIndex + 1) / projects.length;
-  }, [activeIndex]);
 
   const previousProject = () => {
     setActiveIndex((current) =>
@@ -31,20 +51,18 @@ export function Work() {
 
   return (
     <section ref={ref} id="work" className="site-section work-section">
-      <div className="section-divider" />
-
       <div className="work-carousel-shell">
         <div className={`work-header ${visible ? "is-visible" : ""}`}>
-          <p className="section-kicker">{t("work.kicker")}</p>
+          <div className="work-section-divider" />
           <div className="work-heading-row">
-            <h2 className="section-title">{t("work.title")}</h2>
+            <h2 className="section-title work-title">{t("work.title")}</h2>
 
             <div className="work-controls" aria-label="Project carousel">
               <button
                 type="button"
                 onClick={previousProject}
                 className="work-control"
-                aria-label="Previous project"
+                aria-label={t("work.previous")}
               >
                 <ChevronLeft size={20} />
               </button>
@@ -53,7 +71,7 @@ export function Work() {
                 type="button"
                 onClick={nextProject}
                 className="work-control"
-                aria-label="Next project"
+                aria-label={t("work.next")}
               >
                 <ChevronRight size={20} />
               </button>
@@ -64,10 +82,17 @@ export function Work() {
         <div className="work-carousel-viewport">
           <div
             className="work-carousel-track"
-            style={{ transform: `translateX(calc(${activeIndex} * -100%))` }}
+            style={{
+              transform: `translateX(calc(50% - var(--work-card-width) / 2 - ${activeIndex} * (var(--work-card-width) + var(--work-slide-gap))))`,
+            }}
           >
             {projects.map((project, index) => (
-              <div key={project.id} className="work-carousel-slide">
+              <div
+                key={project.id}
+                className={`work-carousel-slide ${
+                  index === activeIndex ? "is-active" : ""
+                }`}
+              >
                 <ProjectCard
                   project={project}
                   index={index}
@@ -85,10 +110,19 @@ export function Work() {
           </span>
 
           <div className="work-progress">
-            <div
-              className="work-progress-bar"
-              style={{ transform: `scaleX(${progress})` }}
-            />
+            {projects.map((project, index) => (
+              <button
+                key={project.id}
+                type="button"
+                className={`work-progress-segment ${
+                  index === activeIndex ? "is-active" : ""
+                }`}
+                onClick={() => setActiveIndex(index)}
+                aria-label={`${t("work.goTo")} ${index + 1}`}
+              >
+                <span />
+              </button>
+            ))}
           </div>
         </div>
       </div>

@@ -3,6 +3,8 @@
 import { ExternalLink } from "lucide-react";
 import { LiaGithub, LiaLinkedinIn } from "react-icons/lia";
 
+import { Button } from "@/src/components/ui/Button";
+import { useLanguage } from "@/src/context/LanguageContext";
 import { useInView } from "@/src/hooks/useInView";
 
 const WPP_LINK =
@@ -23,6 +25,7 @@ const socialLinks = [
 
 export function Contact() {
   const { ref, visible } = useInView<HTMLElement>(0.2);
+  const { t } = useLanguage();
 
   return (
     <section ref={ref} id="contact" className="site-section contact-section">
@@ -31,30 +34,27 @@ export function Contact() {
           <div className="contact-badge">
             <span className="contact-badge-dot" />
             <span className="contact-badge-text">
-              AVAILABLE FOR NEW PROJECT
+              {t("contact.badge")}
             </span>
           </div>
 
-          <h2 className="contact-title">
-            HAVE A PROJECT
-            <br />
-            IN MIND?
-          </h2>
+          <h2 className="contact-title">{t("contact.title")}</h2>
 
           <p className="contact-text">
-            Together, we can create something modern, functional and impactful.
-            Let&apos;s build an experience that truly stands out.
+            {t("contact.text")}
           </p>
 
-          <a
-            href={WPP_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="contact-button"
-          >
-            <span>Contact Me</span>
-            <ExternalLink size={18} />
-          </a>
+          <Button asChild variant="unstyled" size="unstyled">
+            <a
+              href={WPP_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="contact-button"
+            >
+              <span>{t("contact.cta")}</span>
+              <ExternalLink size={18} />
+            </a>
+          </Button>
         </div>
 
         <div className="contact-socials">

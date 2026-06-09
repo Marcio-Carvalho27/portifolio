@@ -1,31 +1,31 @@
-export const experiences = [
+export type ExperienceItem = {
+  id: string;
+  companyKey: string;
+  roleKey: string;
+  periodKey: string;
+  summaryKey: string;
+};
+
+export const experiences: ExperienceItem[] = [
   {
     id: "outlier",
-
-    company: "Outlier AI",
-
-    role: "Freelance AI Trainer",
-
-    period: "2024 — 2025",
+    companyKey: "experience.outlier.company",
+    roleKey: "experience.outlier.role",
+    periodKey: "experience.outlier.period",
+    summaryKey: "experience.outlier.summary",
   },
-
   {
-    id: "icUFBA",
-
-    company: "Federal University of Bahia (UFBA)",
-
-    role: "Researcher",
-
-    period: "2024 — 2025",
+    id: "ufba",
+    companyKey: "experience.ufba.company",
+    roleKey: "experience.ufba.role",
+    periodKey: "experience.ufba.period",
+    summaryKey: "experience.ufba.summary",
   },
-
   {
     id: "engepack",
-
-    company: "Engepack Embalagens",
-
-    role: "Production Planning and Control Intern (PCP)",
-
-    period: "2025 — Present",
+    companyKey: "experience.engepack.company",
+    roleKey: "experience.engepack.role",
+    periodKey: "experience.engepack.period",
+    summaryKey: "experience.engepack.summary",
   },
 ];

@@ -3,11 +3,13 @@
 import { useState } from "react";
 
 import { experiences } from "@/src/content/experience";
+import { useLanguage } from "@/src/context/LanguageContext";
 import { useInView } from "@/src/hooks/useInView";
 
 export function Experience() {
   const { ref, visible } = useInView<HTMLElement>(0.15);
   const [activeExperience, setActiveExperience] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   return (
     <section
@@ -19,9 +21,11 @@ export function Experience() {
 
       <div className="section-shell flex h-full flex-col">
         <div className={`section-header ${visible ? "is-visible" : ""}`}>
-          <p className="section-kicker section-kicker-on-dark">Journey</p>
+          <p className="section-kicker section-kicker-on-dark">
+            {t("experience.kicker")}
+          </p>
           <h2 className="section-title section-title-on-dark mb-8">
-            /Experience.
+            {t("experience.title")}
           </h2>
         </div>
 
@@ -48,18 +52,19 @@ export function Experience() {
                 <div className="experience-row-content">
                   <div>
                     <h3 className="experience-company">
-                      {experience.company}
+                      {t(experience.companyKey)}
                     </h3>
-                    <p className="experience-role">{experience.role}</p>
+                    <p className="experience-role">{t(experience.roleKey)}</p>
+                    <p className="experience-summary">
+                      {t(experience.summaryKey)}
+                    </p>
                   </div>
 
-                  <p className="experience-period">{experience.period}</p>
+                  <p className="experience-period">{t(experience.periodKey)}</p>
                 </div>
               </article>
             );
           })}
-
-          <div className="experience-row is-visible" />
         </div>
       </div>
     </section>

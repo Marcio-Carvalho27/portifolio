@@ -43,10 +43,10 @@ type TileData = {
 };
 
 function getColumns() {
-  if (typeof window === "undefined") return 12;
-  if (window.innerWidth <= 640) return 6;
-  if (window.innerWidth <= 900) return 8;
-  return 12;
+  if (typeof window === "undefined") return 24;
+  if (window.innerWidth <= 640) return 12;
+  if (window.innerWidth <= 900) return 18;
+  return 24;
 }
 
 function randomShape(): ShapeType {
