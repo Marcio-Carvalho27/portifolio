@@ -16,7 +16,7 @@ export default function Home() {
         <HeroAboutReveal hero={<Hero />} about={<About />} />
         <Work />
         <Experience />
-        <Testimonials />
+        {/* <Testimonials /> */}
         <Services />
         <Contact />
       </main>

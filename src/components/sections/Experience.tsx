@@ -8,63 +8,116 @@ import { useInView } from "@/src/hooks/useInView";
 
 export function Experience() {
   const { ref, visible } = useInView<HTMLElement>(0.15);
-  const [activeExperience, setActiveExperience] = useState<string | null>(null);
+  const [activeExperience, setActiveExperience] = useState(
+    experiences.at(-1)?.id ?? experiences[0].id
+  );
   const { t } = useLanguage();
+  const activeIndex = Math.max(
+    0,
+    experiences.findIndex((experience) => experience.id === activeExperience)
+  );
+  const selectedExperience = experiences[activeIndex];
 
   return (
     <section
       ref={ref}
       id="experience"
-      className="site-section section-primary section-full"
+      className="site-section section-full experience-section"
     >
-      <div className="section-divider section-divider-on-dark" />
+      <div className="experience-grid" aria-hidden />
+      <div className="experience-orbit experience-orbit-one" aria-hidden />
+      <div className="experience-orbit experience-orbit-two" aria-hidden />
 
-      <div className="section-shell flex h-full flex-col">
-        <div className={`section-header ${visible ? "is-visible" : ""}`}>
-          <p className="section-kicker section-kicker-on-dark">
-            {t("experience.kicker")}
-          </p>
-          <h2 className="section-title section-title-on-dark mb-8">
-            {t("experience.title")}
-          </h2>
+      <div className="section-shell experience-shell">
+        <div className={`experience-header ${visible ? "is-visible" : ""}`}>
+          <div>
+            <p className="section-kicker">{t("experience.kicker")}</p>
+            <h2 className="section-title">{t("experience.title")}</h2>
+          </div>
+          <span className="experience-header-index" aria-hidden>
+            {String(activeIndex + 1).padStart(2, "0")} /{" "}
+            {String(experiences.length).padStart(2, "0")}
+          </span>
         </div>
 
-        <div className="experience-list">
-          {experiences.map((experience, index) => {
-            const isActive = activeExperience === experience.id;
+        <div className={`experience-stage ${visible ? "is-visible" : ""}`}>
+          <nav className="experience-timeline" aria-label={t("experience.title")}>
+            <span className="experience-timeline-line" aria-hidden />
 
-            return (
-              <article
-                key={experience.id}
-                onMouseEnter={() => setActiveExperience(experience.id)}
-                onMouseLeave={() => setActiveExperience(null)}
-                className={[
-                  "experience-row",
-                  visible ? "is-visible" : "",
-                  isActive ? "is-active" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                style={{
-                  transitionDelay: `${0.15 + index * 0.1}s`,
-                }}
-              >
-                <div className="experience-row-content">
-                  <div>
-                    <h3 className="experience-company">
+            {experiences.map((experience, index) => {
+              const isActive = activeExperience === experience.id;
+
+              return (
+                <button
+                  key={experience.id}
+                  type="button"
+                  className={`experience-marker ${
+                    isActive ? "is-active" : ""
+                  }`}
+                  onClick={() => setActiveExperience(experience.id)}
+                  onMouseEnter={() => setActiveExperience(experience.id)}
+                  onFocus={() => setActiveExperience(experience.id)}
+                  aria-pressed={isActive}
+                >
+                  <span className="experience-marker-dot" aria-hidden />
+                  <span className="experience-marker-copy">
+                    <span className="experience-marker-number">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="experience-marker-company">
                       {t(experience.companyKey)}
-                    </h3>
-                    <p className="experience-role">{t(experience.roleKey)}</p>
-                    <p className="experience-summary">
-                      {t(experience.summaryKey)}
-                    </p>
-                  </div>
+                    </span>
+                    <span className="experience-marker-period">
+                      {t(experience.periodKey)}
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
 
-                  <p className="experience-period">{t(experience.periodKey)}</p>
-                </div>
-              </article>
-            );
-          })}
+          <article
+            key={selectedExperience.id}
+            className="experience-feature"
+          >
+            <div className="experience-feature-top">
+              <span className="experience-feature-label">
+                {t(selectedExperience.periodKey)}
+              </span>
+              <span className="experience-feature-status" aria-hidden>
+                <span />
+                {String(activeIndex + 1).padStart(2, "0")}
+              </span>
+            </div>
+
+            <div className="experience-feature-copy">
+              <p className="experience-feature-role">
+                {t(selectedExperience.roleKey)}
+              </p>
+              <h3 className="experience-feature-company">
+                {t(selectedExperience.companyKey)}
+              </h3>
+              <p className="experience-feature-summary">
+                {t(selectedExperience.summaryKey)}
+              </p>
+            </div>
+
+            <div className="experience-feature-footer">
+              <span>{t("experience.kicker")}</span>
+              <div className="experience-feature-progress" aria-hidden>
+                {experiences.map((experience) => (
+                  <span
+                    key={experience.id}
+                    className={
+                      experience.id === selectedExperience.id
+                        ? "is-active"
+                        : ""
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+          </article>
         </div>
       </div>
     </section>
