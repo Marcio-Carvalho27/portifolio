@@ -791,6 +791,10 @@ a {
   width: var(--work-card-width);
   min-width: var(--work-card-width);
   justify-content: flex-start;
+  transform-origin: center bottom;
+  transition:
+    transform 0.32s var(--ease-out),
+    filter 0.32s var(--ease-out);
 }
 
 /* ── Card entrance animation ── */
@@ -909,6 +913,26 @@ a {
       rgba(0, 0, 0, 0.12) 100%
     );
   pointer-events: none;
+}
+
+.work-carousel-slide .project-card-badge {
+  position: absolute;
+  top: clamp(1rem, 2.4vw, 1.5rem);
+  left: clamp(1rem, 2.4vw, 1.5rem);
+  z-index: 3;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  background: rgba(8, 10, 8, 0.48);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 7px 11px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .work-carousel-slide .project-card-fallback {
@@ -2955,26 +2979,39 @@ a {
   width: 100%;
   margin-top: clamp(28px, 5vh, 52px);
   overflow: visible;
+  mask-image: none;
+  -webkit-mask-image: none;
+  cursor: grab;
+  perspective: 1400px;
+  touch-action: pan-y;
+  transition: transform 0.32s var(--ease-out);
+  user-select: none;
+}
+
+.work-carousel-viewport.is-dragging {
+  cursor: grabbing;
+  transform: translateY(-18px);
 }
 
 .work-carousel-track {
   display: flex;
   gap: var(--work-slide-gap);
-  transition: transform 0.5s var(--ease-editorial);
   will-change: transform;
 }
 
-.work-carousel-slide {
+.work-carousel-viewport.is-dragging .work-carousel-track {
+  pointer-events: none;
+}
+
+.work-section .work-carousel-slide {
   display: flex;
   width: var(--work-card-width);
   min-width: var(--work-card-width);
   justify-content: flex-start;
-  opacity: 0.42;
-  transition: opacity 0.35s ease;
-}
-
-.work-carousel-slide.is-active {
-  opacity: 1;
+  transform-origin: center bottom;
+  transition:
+    transform 0.32s var(--ease-out),
+    filter 0.32s var(--ease-out);
 }
 
 .work-carousel-slide .project-card {
@@ -2987,12 +3024,35 @@ a {
   background: var(--color-work-surface-deep);
   box-shadow: 0 18px 44px var(--color-work-card-shadow);
   color: var(--color-work-text);
+  transform-origin: center bottom;
   transition:
     opacity 0.7s var(--ease-out),
     transform 0.7s var(--ease-out),
     filter 0.7s var(--ease-out),
     border-color 0.3s ease,
     box-shadow 0.3s ease;
+}
+
+.work-carousel-viewport.is-dragging .work-carousel-slide {
+  filter: saturate(0.82);
+  transform: translateY(-4px) scale(0.66);
+}
+
+.work-carousel-viewport.is-dragging
+  .work-carousel-slide.is-active {
+  filter: saturate(1);
+  transform: translateY(-22px) scale(0.82);
+}
+
+.work-carousel-viewport.is-dragging
+  .work-carousel-slide.is-active
+  .project-card {
+  box-shadow: 0 34px 76px rgba(0, 0, 0, 0.28);
+}
+
+.work-carousel-viewport.is-spinning .work-carousel-slide {
+  transform: scale(0.94);
+  transition: transform 0.2s ease;
 }
 
 .work-carousel-slide .project-card.is-hovered {

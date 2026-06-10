@@ -54,6 +54,8 @@ export function ProjectCard({ project, index, visible }: ProjectCardProps) {
           </div>
         )}
 
+        <span className="project-card-badge">{t(project.typeKey)}</span>
+
         {hasLink && (
           <span className="project-card-link">
             {linkLabel}
