@@ -15,11 +15,11 @@ export function Services() {
     <section
       ref={ref}
       id="services"
-      className="site-section section-light section-full"
+      className="site-section section-light section-full services-section"
     >
       <div className="section-divider" />
 
-      <div className="section-shell flex h-full flex-col">
+      <div className="section-shell services-shell">
         <div className={`section-header ${visible ? "is-visible" : ""}`}>
           <p className="section-kicker">{t("services.kicker")}</p>
           <h2 className="section-title mb-10">{t("services.title")}</h2>

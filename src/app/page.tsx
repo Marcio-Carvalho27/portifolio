@@ -15,9 +15,9 @@ export default function Home() {
       <main>
         <HeroAboutReveal hero={<Hero />} about={<About />} />
         <Work />
-        <Services />
-        <Testimonials />
         <Experience />
+        <Testimonials />
+        <Services />
         <Contact />
       </main>
     </>
