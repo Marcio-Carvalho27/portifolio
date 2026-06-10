@@ -11,8 +11,13 @@ const STACKS = [
   "Tailwind",
   "PostgreSQL",
   "Power BI",
-  "Docker",
-  "AWS",
+  "Vue",
+  "Machine Learning",
+  "AI",
+  "n8n",
+  "API",
+  "Python",
+  "Django"
 ];
 
 const SHAPE_TYPES = [
