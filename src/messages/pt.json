@@ -4,9 +4,10 @@
   "hero.cta": "Entre em contato",
 
   "about.kicker": "Sobre mim",
-  "about.title": "Transformando ideias em produtos digitais claros.",
-  "about.paragraph1": "Sou um desenvolvedor full-stack focado em construir produtos digitais limpos, úteis e escaláveis. Meu trabalho conecta interface, backend, dados e pensamento de produto.",
-  "about.paragraph2": "Gosto de interfaces silenciosas, arquitetura clara e experiências que tornam fluxos complexos mais diretos. O objetivo é sempre o mesmo: entregar software bonito, funcional e confiável.",
+  "about.title": "Produtos digitais com propósito.",
+  "about.paragraph1": "Sou desenvolvedor full-stack e combino visão de produto, design de interface e engenharia para transformar ideias complexas em experiências claras e confiáveis.",
+  "about.paragraph2": "Da primeira interação à arquitetura por trás dela, cuido de cada detalhe para criar soluções úteis, rápidas e preparadas para crescer.",
+  "about.lanyardLabel": "Crachá interativo de desenvolvedor",
 
   "work.kicker": "Portfólio",
   "work.title": "/Projetos.",

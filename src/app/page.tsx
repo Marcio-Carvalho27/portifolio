@@ -1,4 +1,5 @@
 import { About } from "@/src/components/sections/About";
+import { HeroAboutReveal } from "@/src/components/animations/HeroAboutReveal";
 import { FloatingNav } from "@/src/components/ui/FloatingNav";
 import { Contact } from "@/src/components/sections/Contact";
 import { Experience } from "@/src/components/sections/Experience";
@@ -12,8 +13,7 @@ export default function Home() {
     <>
       <FloatingNav />
       <main>
-        <Hero />
-        <About />
+        <HeroAboutReveal hero={<Hero />} about={<About />} />
         <Work />
         <Services />
         <Testimonials />

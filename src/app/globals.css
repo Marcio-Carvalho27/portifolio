@@ -119,6 +119,42 @@ a {
   overflow: hidden;
 }
 
+.hero-about-reveal {
+  position: relative;
+  height: 200svh;
+}
+
+.hero-about-reveal-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.hero-about-reveal-about,
+.hero-about-reveal-hero {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-about-reveal-about {
+  z-index: 1;
+}
+
+.hero-about-reveal-hero {
+  z-index: 2;
+  box-shadow: 0 32px 80px rgba(5, 12, 7, 0.38);
+  will-change: transform;
+}
+
+.hero-about-reveal-about .about-section,
+.hero-about-reveal-hero .hero-section {
+  height: 100%;
+  min-height: 100%;
+}
+
 .section-light {
   background: var(--primary-soft);
 }
@@ -499,6 +535,8 @@ a {
 
 .about-header {
   max-width: 940px;
+  margin-bottom: clamp(30px, 4vh, 48px);
+  text-align: center;
   opacity: 0;
   transform: translateY(36px);
   transition:
@@ -534,7 +572,10 @@ a {
 }
 
 .about-copy {
-  max-width: 760px;
+  width: min(100%, 680px);
+  max-width: 680px;
+  justify-self: center;
+  text-align: center;
   opacity: 0;
   transform: translateY(28px);
   transition:
@@ -3230,5 +3271,67 @@ a {
 
   .work-footer {
     gap: 1rem;
+  }
+}
+
+.interactive-lanyard {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 90;
+  isolation: isolate;
+  width: 100%;
+  height: min(92svh, 860px);
+  user-select: none;
+  pointer-events: none;
+}
+
+.interactive-lanyard canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+  pointer-events: auto;
+}
+
+.interactive-lanyard canvas.is-dragging {
+  cursor: grabbing;
+}
+
+@media (max-width: 768px) {
+  .about-section {
+    height: auto;
+    min-height: 100svh;
+  }
+
+  .about-copy {
+    width: 100%;
+  }
+
+  .about-shell {
+    min-height: 100svh;
+    height: auto;
+    padding-top: min(54svh, 500px);
+  }
+
+  .about-visual {
+    min-height: 0;
+  }
+
+  .interactive-lanyard {
+    left: 0;
+    width: 100%;
+    height: min(53svh, 500px);
+  }
+}
+
+@media (max-width: 480px) {
+  .about-shell {
+    padding-top: min(50svh, 440px);
+  }
+
+  .interactive-lanyard {
+    width: 100vw;
+    height: min(49svh, 450px);
   }
 }

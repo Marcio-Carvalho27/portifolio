@@ -4,9 +4,10 @@
   "hero.cta": "Get In Touch",
 
   "about.kicker": "About me",
-  "about.title": "Turning ideas into clear digital products.",
-  "about.paragraph1": "I am a full-stack developer focused on building clean, useful and scalable digital products. My work sits between interface, backend, data and product thinking.",
-  "about.paragraph2": "I like quiet interfaces, clear architecture and experiences that make complex workflows feel direct. The goal is always the same: ship software that looks sharp and works reliably.",
+  "about.title": "Digital products, built with purpose.",
+  "about.paragraph1": "I am a full-stack developer who combines product thinking, interface design and engineering to turn complex ideas into clear, reliable experiences.",
+  "about.paragraph2": "From the first interaction to the architecture behind it, I care about every detail that makes software useful, fast and ready to grow.",
+  "about.lanyardLabel": "Interactive developer identification badge",
 
   "work.kicker": "Portfolio",
   "work.title": "/Projects.",
